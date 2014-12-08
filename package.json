@@ -1,0 +1,10 @@
+{
+    "name": "meto",
+    "description": "web-based printer driver for meto sp-40",
+    "version": "0.1.0",
+    "private": true,
+    "dependencies": {
+        "serialport": ">1.4.0"
+    }
+}
+
