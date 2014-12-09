@@ -1,0 +1,10 @@
+[Service]
+ExecStart=/usr/bin/node /home/jos/meto/meto.js
+Restart=always
+StandardOutput=syslog
+SyslogIdentifier=meto
+User=jos
+Group=users
+
+[Install]
+WantedBy=multi-user.target
