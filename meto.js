@@ -160,7 +160,11 @@ function findPrinterByName(name) {
 http.createServer(function (req, res) {
     var printer;
     var html = "<!DOCTYPE html><head><title>Printserver</title></head><body>";
-    res.writeHead(200, {'Content-Type': 'text/html'});
+    res.writeHead(200, {
+        'Content-Type': 'text/html', 
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Authorization'
+    });
     getPostData(req, function(post){
         if (post.port && post.data) {
             html += '<br>finding printer...';
