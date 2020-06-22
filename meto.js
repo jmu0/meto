@@ -8,20 +8,24 @@ function meto(data){
     if (data.naam) { this.naam = data.naam; }
     if (data.relay) { this.relay = data.relay; }
     if (data.comm) { 
-        this.comm = data.comm; 
-        this.port = new serial.SerialPort(data.comm);
-        var dit = this;
-        var buffer = "";
-        this.port.on('open', function(){
-            console.log(data.comm + ' open');
-            dit.port.on('data', function(data){
-                buffer += data;
-                if (buffer.indexOf('}') > -1) {
-                    dit.setStatus(buffer);
-                    buffer = "";
-                }
+        try {
+            this.comm = data.comm; 
+            this.port = new serial.SerialPort(data.comm);
+            var dit = this;
+            var buffer = "";
+            this.port.on('open', function(){
+                console.log(data.comm + ' open');
+                dit.port.on('data', function(data){
+                    buffer += data;
+                    if (buffer.indexOf('}') > -1) {
+                        dit.setStatus(buffer);
+                        buffer = "";
+                    }
+                });
             });
-        });
+        } catch (exception) {
+            console.log('fout tijdens openen '+this.comm+ ": " + exception);
+        }
     }
 }
 meto.prototype = {
@@ -88,6 +92,7 @@ meto.prototype = {
         console.log(this.naam + " print");
         var dit = this;
         this.setOffTimeout(data);
+        try {
         this.port.write(data, function(err, results) {
             if (err) { console.log('err: ' + err); }
             if (results) { 
@@ -97,6 +102,9 @@ meto.prototype = {
                 },dit.offTimeout);
             }
         });
+        } catch (exception) {
+            console.log('fout tijdens afdrukken naar ' + this.port);
+        }
     }
 };
 
@@ -190,7 +198,9 @@ http.createServer(function (req, res) {
                 html += "<br>invallid printer!";
             }
         } 
-        html += "<br>Ready...</body>";
+        html += "<br>Ready...";
+        html += "<br><button onclick='window.history.back()'>&lt; Terug</button>";
+        html += "</body>";
         res.end(html);
     });
 }).listen(8888);
